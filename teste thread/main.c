@@ -5,14 +5,17 @@
 
 
 void *funcao_threads(void* valor){
-   int valor_func = (int) valor;
-   int num_pares = 0;
-   int operacoes = (10000*(valor_func+1));
+   int valor_thread = (int) valor;
+   long num_pares = 0;
+   long operacoes = (10000 * (valor_thread + 1));
 
+   int divisoes = 0, aux;
    for(int i = 0; i < operacoes; i++){
-      if(i%2 == 0) num_pares++;
+      if(i%2 == 0) num_pares ++; 
    }
-   printf("executando thread %d num_pares = %d\n", valor_func, num_pares);
+
+   printf("executando thread %d num_primos = %ld\n", valor_thread, num_pares);
+   return NULL;
 }
 
 
@@ -36,11 +39,13 @@ int get_num_nucleos_logicos(){
    SYSTEM_INFO sysinfo;
    GetSystemInfo(&sysinfo);
    int num_nucleos = sysinfo.dwNumberOfProcessors;
+   num_nucleos /= (int) 2;
+   return num_nucleos;
 }
 
 
 int main(){ 
-   int num_threads = (int)(get_num_nucleos_logicos()/2);
+   int num_threads = get_num_nucleos_logicos();
    pthread_t threads[num_threads];
    
    int valores[num_threads];
