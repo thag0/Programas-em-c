@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <time.h>
 
-#define NUM_THREADS 4
+
 #define TAMANHO_VETOR 100000
 
 pthread_mutex_t mutex;
@@ -16,8 +17,7 @@ typedef struct{
 
 
 void* calcular_numeros_primos(void* args){
-   long divisoes = 0;
-   long valor = 0;
+   long divisoes = 0, valor = 0;
 
    Dados* dados = (Dados*) args;
    long* vetor_numeros = dados->vetor_numeros;
@@ -47,6 +47,15 @@ void* calcular_numeros_primos(void* args){
 
 
 int main(){
+   int numero_threads = 1;
+   printf("Quantidade de threads: ");
+   scanf("%d", &numero_threads);
+   if(numero_threads < 1) numero_threads = 1;
+   printf("Usando %d thread(s)\n", numero_threads);
+
+   //marcando tempo de execução
+   clock_t tempo_inicio, tempo_fim;
+
    //criação do vetor
    long tamanho_vetor = TAMANHO_VETOR;
    long* vetor_numeros = (long*) malloc(tamanho_vetor * sizeof(long));
@@ -56,13 +65,14 @@ int main(){
    *numeros_primos = 0;
 
    //dados de threads
-   pthread_t threads[NUM_THREADS];
-   Dados* dados = (Dados*) malloc(NUM_THREADS * sizeof(Dados));
+   pthread_t threads[numero_threads];
+   Dados* dados = (Dados*) malloc(numero_threads * sizeof(Dados));
    long indice_inicio = 0;
-   long indice_fim = (long) tamanho_vetor/NUM_THREADS;
+   long indice_fim = (long) tamanho_vetor/numero_threads;
    
+   tempo_inicio = clock();
    pthread_mutex_init(&mutex, NULL);
-   for(int i = 0; i < NUM_THREADS; i++){
+   for(int i = 0; i < numero_threads; i++){
       dados[i].indice_inicio = indice_inicio;
       dados[i].indice_fim = indice_inicio + indice_fim;
       indice_inicio += indice_fim;
@@ -73,12 +83,14 @@ int main(){
       pthread_create(&threads[i], NULL, calcular_numeros_primos, (void*) &dados[i]);
    }
    
-   for(int i = 0; i < NUM_THREADS; i++){
-      pthread_join(threads[i], NULL);
-   }
+   for(int i = 0; i < numero_threads; i++) pthread_join(threads[i], NULL);
    pthread_mutex_destroy(&mutex);
+   tempo_fim = clock();
 
-   printf("Numeros primos entre %ld e %ld: %ld\n", vetor_numeros[0], vetor_numeros[tamanho_vetor-1],*numeros_primos);
+   printf("Numeros primos entre %ld e %ld: %ld\n", vetor_numeros[0], vetor_numeros[tamanho_vetor-1], *numeros_primos);
+
+   double tempo_total = (double) (tempo_fim - tempo_inicio)/CLOCKS_PER_SEC;
+   printf("Tempo de execucao: %.2fs", tempo_total);
 
    free(dados);
    free(vetor_numeros);
