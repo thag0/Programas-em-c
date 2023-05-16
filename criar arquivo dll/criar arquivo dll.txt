@@ -1,9 +1,0 @@
-Arquivos necessários:
-arquivo de cabeçalho (.h) com as declarações de estruturas e funções
-código fonte(.c) com as funcionalidades declaradas no cabeçalho, sem o main 
-
-compilar o arquivo .c para um arquivo de objeto (.o):
-gcc -c nome_arquivo.c -o nome_arquivo.o
-
-compilar o arquivo.o para um arquivo .dll
-gcc -shared -o nome_arquivo.dll nome_arquivo.o
