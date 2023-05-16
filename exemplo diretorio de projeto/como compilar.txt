@@ -1,8 +1,0 @@
-gcc main.c -o main -I./include -L. -llista_encadeada
-
--I inclui o diretorio de arquivos de cabeçalho(.h)
-./include define o caminho até os arquivos .h
-
--L inclui os arquivos de biblioteca (.dll(windows))
-
--l(nome_biblioteca) indica o nome da biblioteca importada para o programa
