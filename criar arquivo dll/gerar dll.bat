@@ -1,3 +1,9 @@
-gcc -c lista_encadeada.c -o lista_encadeada.o
+cls
+set /p NOMEARQUIVO=Digite o nome do arquivo a ser compilado:
 
-gcc -shared -o lista_encadeada.dll lista_encadeada.o
+gcc -c %NOMEARQUIVO%.c -o %NOMEARQUIVO%.o
+gcc -shared -o %NOMEARQUIVO%.dll %NOMEARQUIVO%.o
+
+cls
+@echo compilacao finalizada.
+@pause
